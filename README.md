@@ -422,17 +422,237 @@ SELECT * FROM orders LIMIT 5;
 
 merkato_market=#
 ```
-## 🛠️ Tools & Technologies
-- **PostgreSQL 16**
-- **pgAdmin**
-- **psql (CLI)**
-- **DBeaver**
-- **SQLAlchemy**
+## 📌 Accessing the Merkato Market Database We Just Created
+### 📊 We can check which regions in Ethiopia these customers come from using the DISTINCT keyword
 
-## 📊 Sample Queries
 ```sql
-SELECT customer_name, COUNT(*) AS orders
-FROM orders
-GROUP BY customer_name
-ORDER BY COUNT(*) DESC
-LIMIT 10;
+SELECT DISTINCT region FROM customers;
+       region
+--------------------
+ Addis Ababa
+ Sidama
+ Southwest Ethiopia
+ Somali
+ Gambela
+ South Ethiopia
+ Oromia
+ Harari
+ Dire Dawa
+ Benishangul-Gumuz
+ Central Ethiopia
+ Afar
+ Tigray
+ Amhara
+(14 rows)
+
+
+merkato_market=#
+
+```
+
+
+### 📊 What if we want to see orders from customers? 
+Let's use the join function. We will look into the first 10 records only usingthe  LIMIT keyword.
+```sql
+SELECT orders.order_id,
+customers.customer_name,
+customers.address, customers.region
+FROM orders  JOIN customers
+ON orders.customer_id = customers.customer_id LIMIT 10;
+ order_id |   customer_name    |    address    |       region
+----------+--------------------+---------------+--------------------
+        1 | Samuel Gebremedhin | Shewa Ber     | Afar
+        2 | Fatuma Ahmed       | Gode 03       | Somali
+        3 | Tamrat Tefera      | Goba 01       | Oromia
+        4 | Saron Abera        | Gore          | Oromia
+        5 | Bereket Wondwosen  | Bacho         | Southwest Ethiopia
+        6 | Genet Hagos        | Chilalo       | Oromia
+        7 | Kalkidan Fekadu    | Piassa        | Amhara
+        8 | Halima Mahamed     | Berhane Ber   | Oromia
+        9 | Meseret Haile      | Burka         | Oromia
+       10 | Mulugeta Demissie  | Hawassa Zuria | Sidama
+(10 rows)
+
+```
+### 📊 Which region contributes the most?
+ Let's say the Ethiopian government wants to know which regions of Ethiopia are the top consumers and sellers in the Merkato market. We can give that information
+ using the GROUP BY keyword. These can help shape government policy on product supply and demand.
+ Let's see which region contributes the most customers(merchants) who sell and buy in merkato market
+```sql
+merkato_market=# SELECT region, COUNT(customer_id) AS number_of_customers FROM customers GROUP BY 1 ORDER BY 2 DESC;
+       region       | number_of_customers
+--------------------+---------------------
+ Oromia             |                  15
+ Amhara             |                   8
+ Central Ethiopia   |                   6
+ Somali             |                   5
+ South Ethiopia     |                   4
+ Harari             |                   3
+ Dire Dawa          |                   3
+ Tigray             |                   3
+ Sidama             |                   2
+ Southwest Ethiopia |                   2
+ Afar               |                   2
+ Gambela            |                   2
+ Benishangul-Gumuz  |                   1
+ Addis Ababa        |                   1
+(14 rows)
+
+
+merkato_market=#
+```
+We can see Oromia stands at the top. It is the largest region in Ethiopia, and this is very undaerstandable
+
+### 📊 We may also check which products are more expensive by ordering them using the ORDER BY keyword
+
+```sql
+SELECT products.product_name,
+product_categories.category_name,
+products.price
+FROM products
+JOIN product_categories
+ON product_categories.category_id = products.category_id
+ORDER BY price DESC;
+        product_name        |       category_name       |  price
+----------------------------+---------------------------+----------
+ Motorcycle                 | Miscellaneous             | 75000.00
+ Laptop                     | Electronics               | 45000.00
+ Bicycle                    | Miscellaneous             | 15000.00
+ Solar Panel                | Electronics               |  8000.00
+ Mobile Phone               | Electronics               |  7500.00
+ Timber                     | Construction Materials    |  5000.00
+ Wheelbarrow                | Miscellaneous             |  3500.00
+ Tire                       | Miscellaneous             |  3000.00
+ Injera Stove               | Household Items           |  1800.00
+ Earphones                  | Electronics               |  1500.00
+ Corrugated Iron Sheets     | Construction Materials    |  1200.00
+ Shoes                      | Textiles & Clothing       |  1200.00
+ Motor Oil                  | Miscellaneous             |   850.00
+ Sand                       | Construction Materials    |   800.00
+ Jeans                      | Textiles & Clothing       |   800.00
+ Cement                     | Construction Materials    |   650.00
+ Charcoal Stove             | Household Items           |   600.00
+ Flashlight                 | Miscellaneous             |   500.00
+ Charger                    | Electronics               |   500.00
+ Gabi (Traditional Blanket) | Textiles & Clothing       |   450.00
+ Paint                      | Construction Materials    |   450.00
+ Plastic Chair              | Household Items           |   450.00
+ Butter                     | Meat & Dairy              |   400.00
+ Ethiopian Coffee Beans     | Coffee & Beverages        |   400.00
+ Beef                       | Meat & Dairy              |   350.00
+ Handwoven Shawl            | Textiles & Clothing       |   350.00
+ Sheep Meat                 | Meat & Dairy              |   320.00
+ Goat Meat                  | Meat & Dairy              |   300.00
+ T-shirts                   | Textiles & Clothing       |   300.00
+ Clay Jebena (Coffee Pot)   | Household Items           |   300.00
+ Chicken                    | Meat & Dairy              |   280.00
+ Honey                      | Coffee & Beverages        |   250.00
+ Washing Powder             | Household Items           |   250.00
+ Rebar                      | Construction Materials    |   250.00
+ Battery                    | Miscellaneous             |   200.00
+ Netela (Traditional Scarf) | Textiles & Clothing       |   200.00
+ Tea Leaves                 | Coffee & Beverages        |   200.00
+ Sesame Oil                 | Oils & Cooking Essentials |   180.00
+ Groundnut Oil              | Oils & Cooking Essentials |   170.00
+ Berbere                    | Spices & Condiments       |   150.00
+ Cheese                     | Meat & Dairy              |   150.00
+ Garlic                     | Vegetables & Fruits       |   140.00
+ Mitmita                    | Spices & Condiments       |   140.00
+ Sunflower Oil              | Oils & Cooking Essentials |   120.00
+ Turmeric                   | Spices & Condiments       |   120.00
+ Palm Oil                   | Oils & Cooking Essentials |   110.00
+ Eggs                       | Meat & Dairy              |   100.00
+ Black Cumin                | Spices & Condiments       |    95.00
+ Shiro Powder               | Spices & Condiments       |    90.00
+ Toothpaste                 | Miscellaneous             |    80.00
+ Ginger                     | Spices & Condiments       |    80.00
+ Fenugreek                  | Spices & Condiments       |    65.00
+ Sugar                      | Coffee & Beverages        |    60.00
+ Teff                       | Grains & Pulses           |    52.00
+ Lentils                    | Grains & Pulses           |    50.00
+ Avocado                    | Vegetables & Fruits       |    50.00
+ Soap                       | Miscellaneous             |    50.00
+ Chickpeas                  | Grains & Pulses           |    47.00
+ Papaya                     | Vegetables & Fruits       |    45.00
+ Mango                      | Vegetables & Fruits       |    40.00
+ Orange                     | Vegetables & Fruits       |    38.00
+ Peas                       | Grains & Pulses           |    38.00
+ Wheat                      | Grains & Pulses           |    35.50
+ Milk                       | Meat & Dairy              |    35.00
+ Banana                     | Vegetables & Fruits       |    35.00
+ Lemon                      | Vegetables & Fruits       |    30.00
+ Tomato                     | Vegetables & Fruits       |    30.00
+ Barley                     | Grains & Pulses           |    28.75
+ Sorghum                    | Grains & Pulses           |    26.50
+ Carrot                     | Vegetables & Fruits       |    25.00
+ Maize                      | Grains & Pulses           |    24.00
+ Onion                      | Vegetables & Fruits       |    22.00
+ Potato                     | Vegetables & Fruits       |    20.00
+ Cabbage                    | Vegetables & Fruits       |    18.00
+ Pen                        | Miscellaneous             |    15.00
+ Basil                      | Spices & Condiments       |    15.00
+(76 rows)
+```
+### 📊 More insights
+We can do a more advanced summary to group products by category based on their total price
+This information can help shape the market based on which products are expensive and which ones are less expense
+GROUP BY 1 statement means we are GROUPING using the first argument of SELECT, which is category_id
+
+```sql
+SELECT product_categories.category_name AS category_name,
+SUM(products.price) AS total_transactions
+FROM product_categories
+JOIN products ON products.category_id = product_categories.category_id
+GROUP BY 1;
+       category_name       | total_transactions
+---------------------------+--------------------
+ Grains & Pulses           |             301.75
+ Miscellaneous             |           98195.00
+ Household Items           |            3400.00
+ Spices & Condiments       |             755.00
+ Coffee & Beverages        |             910.00
+ Vegetables & Fruits       |             493.00
+ Electronics               |           62500.00
+ Textiles & Clothing       |            3300.00
+ Construction Materials    |            8350.00
+ Meat & Dairy              |            1935.00
+ Oils & Cooking Essentials |             580.00
+(11 rows)
+
+
+merkato_market=#
+```
+The above query returns correct information, but the order is random, and it is not easy to observe trends.
+So, let's put ORDER BY query at the end to order by highest total_transactions to the lowest; for that, we use the DESC keyword where 1 and 2 represent the position of category_name and total_transactions respectively.
+
+```sql
+SELECT product_categories.category_name AS category_name,
+SUM(products.price) AS total_transactions
+FROM product_categories
+JOIN products
+ON products.category_id = product_categories.category_id
+GROUP BY 1
+ORDER BY 2 DESC;
+       category_name       | total_transactions
+---------------------------+--------------------
+ Miscellaneous             |           98195.00
+ Electronics               |           62500.00
+ Construction Materials    |            8350.00
+ Household Items           |            3400.00
+ Textiles & Clothing       |            3300.00
+ Meat & Dairy              |            1935.00
+ Coffee & Beverages        |             910.00
+ Spices & Condiments       |             755.00
+ Oils & Cooking Essentials |             580.00
+ Vegetables & Fruits       |             493.00
+ Grains & Pulses           |             301.75
+(11 rows)
+
+
+merkato_market=#
+```
+## 📌 Future Work
+More can be done with this imaginary database using PostgresSQL queries to extract valuable insights. I plan to work on more similar but real-world datasets to improve my
+expertice on this topic and beyond.
+
+
