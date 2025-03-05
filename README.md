@@ -1,9 +1,17 @@
-# PostgreSQL Portfolio
+# PostgreSQL Database Creation and Queries
 
-## 🚀 About This Portfolio
-Welcome to my PostgreSQL project portfolio! Here, you'll find my database projects, queries, and optimizations.
+## 🚀 About This Project
+Welcome to my PostgreSQL project! In this PostgreSQL project, I will create a database named `merkato_market` which contains four tables such as `products, customers, product_categories
+and orders`. Merkato market in Addis Ababa has hundreds of various items sold and bought by customers. The products table contains information 
+about those items. Each product is categorized under the `product_categories` table, which contains information about product categories. For example, Teff and laptop are evidently under different categories. Finally, the `orders` table contains orders(selling and buying) by merkato customers, which means merchants from all over Ethiopia. After creating the database, I will conduct some queries to demonstrate the application of PostgreSQL for getting insights into the database. 
 
-## 📌 Projects
+## 📌 Creating Merkato Market Database 
+
+```sql
+
+CREATE DATABASE merkato_market
+
+```
 
 ### 1️⃣ **E-commerce Database Design**
 - **Description**: Designed a normalized PostgreSQL database for an e-commerce store.
