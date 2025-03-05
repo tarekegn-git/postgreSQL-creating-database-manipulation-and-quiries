@@ -458,7 +458,7 @@ merkato_market=#
 
 
 ### 📊 What if we want to see orders from customers? 
-Let's use the join function. We will look into the first 10 records only usingthe  LIMIT keyword.
+Let's use the join function. We will look into the first 10 records only using the  LIMIT keyword.
 ```sql
 SELECT orders.order_id,
 customers.customer_name,
@@ -602,7 +602,7 @@ ORDER BY price DESC;
 ### 📊 More insights
 We can do a more advanced summary to group products by category based on their total price
 This information can help shape the market based on which products are expensive and which ones are less expense
-GROUP BY 1 statement means we are GROUPING using the first argument of SELECT, which is category_id
+GROUP BY 1 statement means we are GROUPING using the first argument of SELECT, which is category_name
 
 ```sql
 SELECT product_categories.category_name AS category_name,
